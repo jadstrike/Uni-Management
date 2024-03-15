@@ -12,7 +12,7 @@ model User {
   name                      String    @db.VarChar(255)
   email                     String    @unique @db.VarChar(255)
   password                  String
-  role                      Role      @default(Admin)
+  role                      Role      @default(Staff)
   ideas                     Idea[]
   isVerified                Boolean   @default(false)
   isStaff                   Boolean   @default(true)

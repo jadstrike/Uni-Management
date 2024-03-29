@@ -16,14 +16,14 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
           verifyTokenExpiry: new Date(Date.now() + 3600000),
         },
       });
-    } else if (emailType === "RESET") {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          forgotPasswordToken: hashedToken,
-          forgotPasswordTokenExpiry: new Date(Date.now() + 3600000),
-        },
-      });
+      // } else if (emailType === "RESET") {
+      //   await prisma.user.update({
+      //     where: { id: userId },
+      //     data: {
+      //       forgotPasswordToken: hashedToken,
+      //       forgotPasswordTokenExpiry: new Date(Date.now() + 3600000),
+      //     },
+      //   });
     }
 
     var transport = nodemailer.createTransport({

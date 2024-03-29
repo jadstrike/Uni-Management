@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { sendEmail } from "@/helpers/mailer";
+// import { sendEmail } from "@/helpers/mailer";
 
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { username, email, password } = reqBody;
+    const { username, email, password, role } = reqBody;
 
     // check if user already exists
     const user = await prisma.user.findUnique({ where: { email } });
@@ -29,8 +29,7 @@ export async function POST(request: NextRequest) {
         name: username,
         email,
         password: hashedPassword,
-        forgotPasswordToken: null,
-        forgotPasswordTokenExpiry: null,
+        role,
         verifyToken: null,
         verifyTokenExpiry: null,
       },
@@ -39,7 +38,7 @@ export async function POST(request: NextRequest) {
     console.log(newUser);
 
     // send verification email
-    await sendEmail({ email, emailType: "VERIFY", userId: newUser.id });
+    // await sendEmail({ email, emailType: "VERIFY", userId: newUser.id });
 
     return NextResponse.json({
       message: "User created successfully",

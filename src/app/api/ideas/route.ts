@@ -31,7 +31,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  const ideas = await prisma.idea.findMany({ orderBy: { createdAt: "desc" } });
+  const ideas = await prisma.idea.findMany({
+    orderBy: { createdAt: "desc" },
+  });
 
   return NextResponse.json({ ideas });
 }

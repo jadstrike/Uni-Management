@@ -14,6 +14,7 @@ model User {
   password          String
   role              Role
   ideas             Idea[]
+  comments          Comment[]
   isVerified        Boolean   @default(false)
   verifyToken       String?
   verifyTokenExpiry DateTime?
@@ -27,10 +28,21 @@ enum Role {
 }
 
 model Idea {
-  id        String   @id @default(uuid()) @db.Uuid
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
+  id        String    @id @default(uuid()) @db.Uuid
+  title     String    @db.VarChar(255)
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
   content   String
+  authorId  String    @db.Uuid
+  author    User      @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid()) @db.Uuid
+  text      String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  ideaId    String   @db.Uuid
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   authorId  String   @db.Uuid
   author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

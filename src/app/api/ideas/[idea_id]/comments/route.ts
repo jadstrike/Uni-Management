@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
-    const ideaId = request.url.split("ideas/")[1];
+    const ideaId = request.url.split("/")[5];
     const authorId = await getDataFromToken(request);
     const reqBody = await request.json();
     const { text } = reqBody;
@@ -37,25 +37,4 @@ export async function GET() {
   });
 
   return NextResponse.json({ comments });
-}
-
-export async function PUT(request: NextRequest) {
-  try {
-    const reqBody = await request.json();
-    const { text } = reqBody;
-    const id = request.url.split("comments/")[1];
-
-    const updatedComment = await prisma.comment.update({
-      where: { id },
-      data: { text },
-    });
-
-    return NextResponse.json({
-      message: "Comment updated successfully",
-      success: true,
-      updatedComment,
-    });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
 }

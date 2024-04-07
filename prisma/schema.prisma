@@ -28,13 +28,14 @@ enum Role {
 }
 
 model Idea {
-  id        String    @id @default(uuid()) @db.Uuid
-  title     String    @db.VarChar(255)
-  createdAt DateTime  @default(now()) @db.Timestamp(6)
-  content   String
-  authorId  String    @db.Uuid
-  author    User      @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  comments  Comment[]
+  id         String              @id @default(uuid()) @db.Uuid
+  title      String              @db.VarChar(255)
+  createdAt  DateTime            @default(now()) @db.Timestamp(6)
+  content    String
+  authorId   String              @db.Uuid
+  author     User                @relation(fields: [authorId], references: [id])
+  comments   Comment[]
+  categories CategoriesOnIdeas[]
 }
 
 model Comment {
@@ -42,7 +43,22 @@ model Comment {
   text      String
   createdAt DateTime @default(now()) @db.Timestamp(6)
   ideaId    String   @db.Uuid
-  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idea      Idea     @relation(fields: [ideaId], references: [id])
   authorId  String   @db.Uuid
-  author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Category {
+  id    String              @id @default(uuid()) @db.Uuid
+  name  String
+  ideas CategoriesOnIdeas[]
+}
+
+model CategoriesOnIdeas {
+  idea       Idea     @relation(fields: [ideaId], references: [id])
+  ideaId     String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @db.Uuid
+
+  @@id([ideaId, categoryId])
 }

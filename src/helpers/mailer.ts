@@ -1,8 +1,4 @@
 import nodemailer from "nodemailer";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
 
 export const sendEmail = async ({ email, username }: any) => {
   try {

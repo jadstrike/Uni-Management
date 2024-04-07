@@ -11,7 +11,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Uni Management System",
-  description: "Basic dashboard with Next.js and Shadcn",
+  description:
+    "A secure web-enabled role-based system for collecting ideas for improvement from staff in a large University",
 };
 
 export default async function RootLayout({

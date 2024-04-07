@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
+import { sendEmail } from "@/helpers/mailer";
 
 const prisma = new PrismaClient();
 
@@ -20,6 +21,16 @@ export async function POST(request: NextRequest) {
     });
 
     console.log(newComment);
+
+    const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
+    const author = await prisma.user.findUnique({
+      where: { id: idea?.authorId },
+    });
+    const commenter = await prisma.user.findUnique({ where: { id: authorId } });
+    const email = author?.email;
+    const username = commenter?.name;
+
+    await sendEmail({ email, username });
 
     return NextResponse.json({
       message: "Comment created successfully",

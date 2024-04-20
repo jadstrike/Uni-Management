@@ -19,6 +19,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const username = user.name;
+    const role = user.role;
+
     // check if the password is correct
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
@@ -48,7 +51,8 @@ export async function POST(request: NextRequest) {
     });
     const response = NextResponse.json({
       message: "Successfully logged in",
-      success: true,
+      username,
+      role,
     });
     response.cookies.set("token", token, { httpOnly: true });
 

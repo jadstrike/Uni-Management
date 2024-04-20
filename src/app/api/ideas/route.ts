@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { title, content } = reqBody;
+    const { title, content, categories } = reqBody;
     const authorId = await getDataFromToken(request);
 
     const newIdea = await prisma.idea.create({
@@ -15,6 +15,15 @@ export async function POST(request: NextRequest) {
         title,
         content,
         authorId,
+        categories: {
+          create: categories.map((categoryID: any) => ({
+            category: {
+              connect: {
+                id: categoryID,
+              },
+            },
+          })),
+        },
       },
     });
 
@@ -22,10 +31,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: "Idea created successfully",
-      success: true,
       newIdea,
     });
   } catch (error: any) {
+    console.log(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -30,6 +30,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // check if the user is banned
+    if (user.isBanned) {
+      return NextResponse.json({ message: "This user account is banned." });
+    }
+
     // create token data
     const tokenData = {
       id: user.id,

@@ -96,7 +96,7 @@ dependencies:
     specifier: 10.4.15
     version: 10.4.15(postcss@8.4.28)
   axios:
-    specifier: ^1.6.7
+    specifier: ^1.6.8
     version: 1.6.8
   bcryptjs:
     specifier: ^2.4.3

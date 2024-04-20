@@ -1,3 +1,4 @@
+"use client";
 import BreadCrumb from "@/components/breadcrumb";
 import {
   Card,

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { title, content, categories } = reqBody;
+    const { title, content, categories, file } = reqBody;
     const authorId = await getDataFromToken(request);
 
     const newIdea = await prisma.idea.create({
@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
         title,
         content,
         authorId,
+        file,
         categories: {
           create: categories.map((categoryID: any) => ({
             category: {

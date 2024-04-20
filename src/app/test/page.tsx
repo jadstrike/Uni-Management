@@ -24,13 +24,13 @@ export default function Profile() {
     const url = document.data.publicUrl;
     console.log(url);
 
-    await fetch("http://localhost:3000/api/documents", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: url,
-    });
+    // await fetch("http://localhost:3000/api/documents", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: url,
+    // });
 
     alert("File uploaded successfully!");
   };

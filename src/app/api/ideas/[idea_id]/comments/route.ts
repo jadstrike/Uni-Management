@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-import { sendEmail } from "@/helpers/mailer";
+import { sendEmail } from "@/helpers/commentNoti";
 
 const prisma = new PrismaClient();
 

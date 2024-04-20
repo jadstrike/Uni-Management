@@ -34,6 +34,7 @@ model Idea {
   author     User                @relation(fields: [authorId], references: [id])
   comments   Comment[]
   categories CategoriesOnIdeas[]
+  file       String?
   thumbsUp   Int                 @default(0)
   thumbsDown Int                 @default(0)
 }

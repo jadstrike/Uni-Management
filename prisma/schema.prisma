@@ -8,16 +8,14 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(uuid()) @db.Uuid
-  name              String    @db.VarChar(255)
-  email             String    @unique @db.VarChar(255)
-  password          String
-  role              Role
-  ideas             Idea[]
-  comments          Comment[]
-  isVerified        Boolean   @default(false)
-  verifyToken       String?
-  verifyTokenExpiry DateTime?
+  id       String    @id @default(uuid()) @db.Uuid
+  name     String    @db.VarChar(255)
+  email    String    @unique @db.VarChar(255)
+  password String
+  role     Role
+  ideas    Idea[]
+  comments Comment[]
+  isBanned Boolean   @default(false)
 }
 
 enum Role {
@@ -36,6 +34,9 @@ model Idea {
   author     User                @relation(fields: [authorId], references: [id])
   comments   Comment[]
   categories CategoriesOnIdeas[]
+  documents  Document[]
+  thumbsUp   Int                 @default(0)
+  thumbsDown Int                 @default(0)
 }
 
 model Comment {
@@ -61,4 +62,11 @@ model CategoriesOnIdeas {
   categoryId String   @db.Uuid
 
   @@id([ideaId, categoryId])
+}
+
+model Document {
+  id     String @id @db.Uuid
+  url    String
+  ideaID String @db.Uuid
+  idea   Idea   @relation(fields: [ideaID], references: [id])
 }

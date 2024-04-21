@@ -52,7 +52,7 @@ export default async function page() {
           />
 
           <Link
-            href={"/dashboard/idea/new"}
+            href={"/dashboard/idea/add"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New

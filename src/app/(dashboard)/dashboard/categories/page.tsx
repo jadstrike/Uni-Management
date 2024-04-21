@@ -1,7 +1,23 @@
+"use client";
+
 import BreadCrumb from "@/components/breadcrumb";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import CategoryDeleteButton from "@/components/forms/categories/category-delete-button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Plus } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +39,10 @@ import { get } from "http";
 import Link from "next/link";
 import axios from "axios";
 import { Key } from "react";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
+import CategoryEditButton from "@/components/forms/categories/category-edit-button";
+import { id, tr } from "date-fns/locale";
+import PageLoading from "../loading";
 
 interface Category {
   id: string;
@@ -53,16 +72,96 @@ interface Category {
 
 const breadcrumbItems = [{ title: "Categories", link: "/dashboard/category" }];
 
-const Categories = async () => {
-  "use server";
-  const response = await axios.get("http://localhost:3000/api/categories");
-  return (
+const formSchema = z.object({
+  name: z.string().min(2).max(50),
+  id: z.string(),
+});
+
+const Categories = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values.name);
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/categories/${values.id}`,
+        {
+          name: values.name,
+
+          // add more data if needed
+        }
+      );
+      console.log(response.data);
+      // alert(response.data.message);
+      toast.success(response.data.message, {
+        duration: 5000,
+      });
+      // <Toaster richColors />;
+      form.reset();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred. Please try again.");
+    }
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      // "use server";
+      const response = await axios.get("http://localhost:3000/api/categories");
+      setCategories(response.data.categories);
+      setLoading(false);
+    };
+
+    fetchCategories();
+  }, []);
+  // const deleteCategoey = async (id: string) => {
+  //   const response = await axios.put(
+  //     `http://localhost:3000/api/categories/${id}`
+  //   );
+  //   if (response.status === 200) {
+  //     toast.success("Category deleted successfully");
+  //     window.location.reload();
+  //   }
+  // };
+
+  // const updateCatrgory = async (id: string, name: string) => {
+  //   const response = await axios.put(
+  //     `http://localhost:3000/api/categories/${id}`,
+  //     { name }
+  //   );
+  //   if (response.status === 200) {
+  //     toast.success("Category updated successfully");
+  //     window.location.reload();
+  //   }
+  // };
+
+  // const response = await axios.get("http://localhost:3000/api/categories");
+  return loading ? (
+    <div className=" flex justify-center items-center h-full w-full ">
+      <h2>Loading.....</h2>
+    </div>
+  ) : (
     <>
       <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
         <BreadCrumb items={breadcrumbItems} />
         <div className="flex items-start justify-between">
           <Heading
-            title={`Categories (${response.data.categories.length})`}
+            title={`Categories (${categories.length})`}
             description="Categories submitted by QA Manager"
           />
 
@@ -77,39 +176,55 @@ const Categories = async () => {
 
         <main>
           <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-8">
-            {response.data.categories.map((category: Category, index: Key) => (
+            {categories.map((category: Category, index: Key) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
-                  <Button variant="outline">{category.name}</Button>
+                  <Button
+                    onClick={() => form.setValue("id", category.id)}
+                    variant="outline"
+                  >
+                    {category.name}
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Category Form</DialogTitle>
-                    <DialogDescription>Editing as a QA</DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-right">
-                        Name
-                      </Label>
-                      <Input
-                        id="name"
-                        defaultValue={category.name}
-                        className="col-span-3"
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-
-                    {/* <Button
-                      onClick={() => CategoryDelete(category.id)}
-                      variant={"destructive"}
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-8 w-full"
                     >
-                      Delete
-                    </Button> */}
-                    <CategoryDeleteButton id={category.id} />
-                  </DialogFooter>
+                      <DialogHeader>
+                        <DialogTitle>Category Edit Form</DialogTitle>
+                        <DialogDescription>Editing as a QA</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className=" w-full gap-4">
+                          <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className=" text-lg">
+                                  Category: {category.name}
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Type new name to edit"
+                                    {...field}
+                                  />
+                                </FormControl>
+
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit">Save changes</Button>
+                        <CategoryDeleteButton id={category.id} />
+                      </DialogFooter>
+                    </form>
+                  </Form>
                 </DialogContent>
               </Dialog>
             ))}

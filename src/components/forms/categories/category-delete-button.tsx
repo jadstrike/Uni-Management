@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 const CategoryDeleteButton = ({ id }: { id: string }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -15,7 +17,11 @@ const CategoryDeleteButton = ({ id }: { id: string }) => {
       );
       console.log(response);
       if (response.status === 200) {
-        toast.success(response.data.message);
+        toast.success(response.data.message, {
+          duration: 5000,
+        });
+        // router.push("/dashboard/categories");
+        window.location.reload();
       }
     } catch (error) {
       toast.error("An error occurred while deleting the category");

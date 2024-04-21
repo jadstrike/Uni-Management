@@ -43,6 +43,7 @@ const CategoryForm = () => {
       );
       console.log(response.data);
       alert(response.data.message);
+      form.reset();
     } catch (error) {
       console.error(error);
       alert("An error occurred. Please try again.");

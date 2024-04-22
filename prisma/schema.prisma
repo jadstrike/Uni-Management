@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid()) @db.Uuid
-  name     String    @db.VarChar(255)
-  email    String    @unique @db.VarChar(255)
-  password String
-  role     Role
-  ideas    Idea[]
-  comments Comment[]
-  isBanned Boolean   @default(false)
+  id           String            @id @default(uuid()) @db.Uuid
+  name         String            @db.VarChar(255)
+  email        String            @unique @db.VarChar(255)
+  password     String
+  role         Role
+  ideas        Idea[]
+  comments     Comment[]
+  isBanned     Boolean           @default(false)
+  interactions IdeaInteraction[]
 }
 
 enum Role {
@@ -37,6 +38,7 @@ model Idea {
   file       String?
   thumbsUp   Int                 @default(0)
   thumbsDown Int                 @default(0)
+  users      IdeaInteraction[]
 }
 
 model Comment {
@@ -64,7 +66,23 @@ model CategoriesOnIdeas {
   @@id([ideaId, categoryId])
 }
 
-model Document {
-  id  String @id @default(uuid()) @db.Uuid
-  url String
+model IdeaInteraction {
+  user   User        @relation(fields: [userId], references: [id])
+  userId String      @db.Uuid
+  idea   Idea        @relation(fields: [ideaId], references: [id])
+  ideaId String      @db.Uuid
+  type   Interaction
+
+  @@id([userId, ideaId])
+}
+
+enum Interaction {
+  ThumbsUp
+  ThumbsDown
+}
+
+model ClosureDate {
+  id                 String   @id @default(uuid()) @db.Uuid
+  initialClosureDate DateTime
+  finalClosureDate   DateTime
 }

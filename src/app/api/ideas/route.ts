@@ -9,6 +9,14 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { title, content, categories, file } = reqBody;
     const authorId = await getDataFromToken(request);
+    const user = await prisma.user.findUnique({ where: { id: authorId } });
+
+    // Check if the user is banned
+    if (user?.isBanned) {
+      return NextResponse.json({
+        message: "This account is banned from posting ideas and comments",
+      });
+    }
 
     const newIdea = await prisma.idea.create({
       data: {

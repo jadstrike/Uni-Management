@@ -8,15 +8,23 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const ideaId = request.url.split("/")[5];
-    const authorId = await getDataFromToken(request);
+    const userId = await getDataFromToken(request);
     const reqBody = await request.json();
     const { text } = reqBody;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    // Check if the user is banned
+    if (user?.isBanned) {
+      return NextResponse.json({
+        message: "This account is banned from posting ideas and comments",
+      });
+    }
 
     const newComment = await prisma.comment.create({
       data: {
         text,
         ideaId,
-        authorId,
+        userId,
       },
     });
 
@@ -26,7 +34,7 @@ export async function POST(request: NextRequest) {
     const author = await prisma.user.findUnique({
       where: { id: idea?.authorId },
     });
-    const commenter = await prisma.user.findUnique({ where: { id: authorId } });
+    const commenter = await prisma.user.findUnique({ where: { id: userId } });
     const email = author?.email;
     const username = commenter?.name;
 

@@ -5,8 +5,10 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const id = request.url.split("ideas/")[1];
-
-  const idea = await prisma.idea.findUnique({ where: { id } });
+  const idea = await prisma.idea.findUnique({
+    where: { id },
+    include: { categories: { include: { category: true } } },
+  });
 
   return NextResponse.json(idea);
 }
@@ -20,11 +22,11 @@ export async function PUT(request: NextRequest) {
     const updatedIdea = await prisma.idea.update({
       where: { id },
       data: { title, content },
+      include: { categories: { include: { category: true } } },
     });
 
     return NextResponse.json({
       message: "Idea updated successfully",
-      success: true,
       updatedIdea,
     });
   } catch (error: any) {
@@ -35,11 +37,13 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const id = request.url.split("ideas/")[1];
 
-  const deletedIdea = await prisma.idea.delete({ where: { id } });
+  const deletedIdea = await prisma.idea.delete({
+    where: { id },
+    include: { categories: { include: { category: true } } },
+  });
 
   return NextResponse.json({
     message: "Idea deleted successfully",
-    success: true,
     deletedIdea,
   });
 }

@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   const comments = await prisma.comment.findMany({
+    where: { isHidden: false },
     orderBy: { createdAt: "desc" },
   });
 

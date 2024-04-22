@@ -41,6 +41,7 @@ model Idea {
   thumbsUp   Int                 @default(0)
   thumbsDown Int                 @default(0)
   users      IdeaInteraction[]
+  isHidden   Boolean             @default(false)
 }
 
 model Comment {
@@ -51,6 +52,7 @@ model Comment {
   idea      Idea     @relation(fields: [ideaId], references: [id])
   authorId  String   @db.Uuid
   author    User     @relation(fields: [authorId], references: [id])
+  isHidden  Boolean  @default(false)
 }
 
 model Category {

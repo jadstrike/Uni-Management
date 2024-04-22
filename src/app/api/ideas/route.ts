@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   const ideas = await prisma.idea.findMany({
+    where: { isHidden: false },
     include: {
       categories: {
         include: {

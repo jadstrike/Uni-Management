@@ -17,3 +17,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function GET() {
+  const departments = await prisma.department.findMany();
+
+  return NextResponse.json({ departments });
+}

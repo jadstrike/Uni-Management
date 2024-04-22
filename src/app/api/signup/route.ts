@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { $Enums, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 // import { sendEmail } from "@/helpers/mailer";
 
@@ -16,6 +16,18 @@ export async function POST(request: NextRequest) {
     if (user) {
       return NextResponse.json(
         { error: "User already exists" },
+        { status: 400 }
+      );
+    }
+
+    // check if qa manager already exists
+    const qam = await prisma.user.findFirst({
+      where: { role: $Enums.Role.QA_Manager },
+    });
+
+    if (qam) {
+      return NextResponse.json(
+        { error: "QA manager already exists" },
         { status: 400 }
       );
     }

@@ -25,24 +25,21 @@ export const columns: ColumnDef<Employee>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "first_name",
+    accessorKey: "name",
     header: "NAME",
   },
-  {
-    accessorKey: "country",
-    header: "COUNTRY",
-  },
+
   {
     accessorKey: "email",
     header: "EMAIL",
   },
   {
-    accessorKey: "job",
-    header: "COMPANY",
+    accessorKey: "department",
+    header: "DEPARTMENT",
   },
   {
-    accessorKey: "gender",
-    header: "GENDER",
+    accessorKey: "role",
+    header: "ROLE",
   },
   {
     id: "actions",

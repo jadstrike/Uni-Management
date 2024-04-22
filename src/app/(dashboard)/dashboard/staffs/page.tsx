@@ -6,10 +6,11 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Employee } from "@/constants/data";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
-const breadcrumbItems = [{ title: "Employee", link: "/dashboard/employee" }];
+const breadcrumbItems = [{ title: "Staffs", link: "/dashboard/staffs" }];
 
 type paramsProps = {
   searchParams: {
@@ -25,11 +26,19 @@ export default async function page({ searchParams }: paramsProps) {
 
   const res = await fetch(
     `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
-      (country ? `&search=${country}` : ""),
+      (country ? `&search=${country}` : "")
   );
+
+  const resUsers = await axios.get("http://localhost:3000/api/users");
+  console.log(resUsers.data);
+
+  //STAFFS DATA FROM DATABASE
+  const staffs = resUsers.data.users;
+  const totaStaffs = staffs.length;
+
   const employeeRes = await res.json();
   const totalUsers = employeeRes.total_users; //1000
-  const pageCount = Math.ceil(totalUsers / pageLimit);
+  const pageCount = Math.ceil(totaStaffs / pageLimit);
   const employee: Employee[] = employeeRes.users;
   return (
     <>
@@ -38,8 +47,8 @@ export default async function page({ searchParams }: paramsProps) {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Employee (${totalUsers})`}
-            description="Manage employees (Server side table functionalities.)"
+            title={`Staffs (${totaStaffs})`}
+            description="Manage Staffs"
           />
 
           <Link
@@ -52,11 +61,11 @@ export default async function page({ searchParams }: paramsProps) {
         <Separator />
 
         <EmployeeTable
-          searchKey="country"
+          searchKey="Name"
           pageNo={page}
           columns={columns}
-          totalUsers={totalUsers}
-          data={employee}
+          totalUsers={totaStaffs}
+          data={staffs}
           pageCount={pageCount}
         />
       </div>

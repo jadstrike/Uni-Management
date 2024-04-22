@@ -13,7 +13,7 @@ export default function Header() {
             href={"https://github.com/Kiranism/next-shadcn-dashboard-starter"}
             target="_blank"
           >
-            <h2>University Management System</h2>
+            <h2>Esta Bliss University</h2>
           </Link>
         </div>
         <div className={cn("block lg:!hidden")}>

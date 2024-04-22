@@ -1,17 +1,7 @@
-import nodemailer from "nodemailer";
+import { transport } from "./nodemailer";
 
 export const sendEmail = async ({ email, username }: any) => {
   try {
-    var transport = nodemailer.createTransport({
-      service: "gmail",
-      host: "sandbox.gmail.com",
-      port: 2525,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
-      },
-    });
-
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,

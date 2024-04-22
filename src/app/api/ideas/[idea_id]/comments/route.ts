@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-import { sendEmail } from "@/helpers/commentNoti";
+import { sendEmail } from "@/helpers/comment";
 
 const prisma = new PrismaClient();
 
@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: "Comment created successfully",
-      success: true,
       newComment,
     });
   } catch (error: any) {

@@ -50,8 +50,8 @@ model Comment {
   createdAt DateTime @default(now()) @db.Timestamp(6)
   ideaId    String   @db.Uuid
   idea      Idea     @relation(fields: [ideaId], references: [id])
-  authorId  String   @db.Uuid
-  author    User     @relation(fields: [authorId], references: [id])
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
   isHidden  Boolean  @default(false)
 }
 

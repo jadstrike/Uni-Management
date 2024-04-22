@@ -7,6 +7,7 @@ export default function Profile() {
   // Handle file upload event
   const uploadFile = async (event: any) => {
     const file = event.target.files[0];
+    console.log(file);
     const bucket = "files";
 
     // Call Storage API to upload file

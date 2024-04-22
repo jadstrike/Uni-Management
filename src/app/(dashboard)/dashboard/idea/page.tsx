@@ -10,10 +10,12 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import axios from "axios";
 
 interface Idea {
   id: String;
@@ -21,24 +23,29 @@ interface Idea {
   createdAt: string;
   content: string;
   authorId: string;
+  file: string;
 }
 // import { users } from "@/constants/data";
 async function getIdeas() {
-  const response = await fetch("http://localhost:3000/api/ideas", {
-    method: "GET",
-  });
+  const response = axios.get("http://localhost:3000/api/ideas");
 
-  return response.json();
+  return response;
 }
 
 const breadcrumbItems = [{ title: "Ideas", link: "/dashboard/user" }];
-export default async function page() {
+export default function Page() {
+  const [data, setData] = useState<Idea[]>([]);
   // const ideas = await getRecipes();
   // const ideas = await fetch("/api/ideas", {
   //   method: "GET",
   // });
-  const data = await getIdeas();
-  console.log(typeof data);
+
+  useEffect(() => {
+    const fetchIdeas = async () => {
+      const response = await getIdeas();
+    };
+    fetchIdeas();
+  }, []);
   console.log(data);
 
   return (
@@ -47,7 +54,7 @@ export default async function page() {
         <BreadCrumb items={breadcrumbItems} />
         <div className="flex items-start justify-between">
           <Heading
-            title={`Ideas (${data.ideas.length})`}
+            title={`Ideas`}
             description="Ideas submitted by employees for the university."
           />
 
@@ -59,28 +66,7 @@ export default async function page() {
           </Link>
         </div>
         <Separator />
-        <main>
-          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-8">
-            {data.ideas.map((idea: Idea, index: Number) => (
-              <Card key={1} className="flex flex-col justify-between">
-                <CardHeader className="flex-row gap-4 items-center">
-                  <div>
-                    <CardTitle>{idea.title}</CardTitle>
-                    {/* <CardDescription>
-                      {idea.time} mins to cook.
-                    </CardDescription> */}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p>{idea.content}</p>
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <Button>Read Details</Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </main>
+        <main></main>
       </div>
     </>
   );

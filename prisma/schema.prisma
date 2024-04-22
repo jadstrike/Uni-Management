@@ -17,6 +17,8 @@ model User {
   comments     Comment[]
   isBanned     Boolean           @default(false)
   interactions IdeaInteraction[]
+  departmentId String?           @db.Uuid
+  department   Department?       @relation(fields: [departmentId], references: [id])
 }
 
 enum Role {
@@ -85,4 +87,10 @@ model ClosureDate {
   id                 String   @id @default(uuid()) @db.Uuid
   initialClosureDate DateTime
   finalClosureDate   DateTime
+}
+
+model Department {
+  id    String @id @default(uuid()) @db.Uuid
+  name  String
+  users User[]
 }

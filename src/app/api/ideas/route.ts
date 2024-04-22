@@ -26,6 +26,13 @@ export async function POST(request: NextRequest) {
           })),
         },
       },
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+      },
     });
 
     console.log(newIdea);
@@ -42,6 +49,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   const ideas = await prisma.idea.findMany({
+    include: {
+      categories: {
+        include: {
+          category: true,
+        },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 

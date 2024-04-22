@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { username, email, password, role } = reqBody;
+    const { username, email, password, role, departmentId } = reqBody;
 
     // check if user already exists
     const user = await prisma.user.findUnique({ where: { email } });
@@ -25,9 +25,24 @@ export async function POST(request: NextRequest) {
       where: { role: $Enums.Role.QA_Manager },
     });
 
-    if (qam) {
+    if (role == "QA_Manager" && qam) {
       return NextResponse.json(
         { error: "QA manager already exists" },
+        { status: 400 }
+      );
+    }
+
+    // check if qa coordinator of a department already exists
+    const qac = await prisma.user.findFirst({
+      where: {
+        role: $Enums.Role.QA_Coordinator,
+        departmentId,
+      },
+    });
+
+    if (role == "QA_Coordinator" && qac) {
+      return NextResponse.json(
+        { error: "QA coordinator of this department already exists" },
         { status: 400 }
       );
     }
@@ -42,6 +57,7 @@ export async function POST(request: NextRequest) {
         email,
         password: hashedPassword,
         role,
+        departmentId,
       },
     });
 
@@ -52,7 +68,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: "User created successfully",
-      success: true,
       newUser,
     });
   } catch (error: any) {

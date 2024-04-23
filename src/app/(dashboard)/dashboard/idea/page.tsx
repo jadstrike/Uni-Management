@@ -1,4 +1,3 @@
-"use client";
 import BreadCrumb from "@/components/breadcrumb";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,26 +25,19 @@ interface Idea {
 }
 // import { users } from "@/constants/data";
 async function getIdeas() {
-  const response = axios.get("http://localhost:3000/api/ideas");
+  const response = await axios.get("http://localhost:3000/api/ideas");
 
-  return response;
+  return response.data;
 }
 
 const breadcrumbItems = [{ title: "Ideas", link: "/dashboard/user" }];
-export default function Page() {
-  const [data, setData] = useState<Idea[]>([]);
+export default async function Page() {
+  const data = await getIdeas();
+  console.log(data);
   // const ideas = await getRecipes();
   // const ideas = await fetch("/api/ideas", {
   //   method: "GET",
   // });
-
-  useEffect(() => {
-    const fetchIdeas = async () => {
-      const response = await getIdeas();
-    };
-    fetchIdeas();
-  }, []);
-  console.log(data);
 
   return (
     <>
@@ -54,7 +45,7 @@ export default function Page() {
         <BreadCrumb items={breadcrumbItems} />
         <div className="flex items-start justify-between">
           <Heading
-            title={`Ideas`}
+            title={`Ideas (${data.ideas.length})`}
             description="Ideas submitted by employees for the university."
           />
 

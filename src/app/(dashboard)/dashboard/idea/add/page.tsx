@@ -1,5 +1,6 @@
 "use client";
 import { Label } from "@/components/ui/label";
+import Select from "react-select";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,6 @@ import {
   SelectTrigger,
   SelectItem,
   SelectContent,
-  Select,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,10 +47,13 @@ const formSchema = z.object({
       : z.unknown().optional(),
 
   category: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .default(""),
+    .array(
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      })
+    )
+    .nonempty({ message: "At least one category is required" }),
 });
 
 interface Category {
@@ -123,15 +126,21 @@ export default function AddIdea() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const selectedCategories = [];
+    for (const category of values.category) {
+      selectedCategories.push(category.value);
+    }
+
     const file = values.file;
     const fileData = await uploadFile(file);
     console.log("File Data" + fileData);
+    console.log(selectedCategories);
 
     try {
       const response = await axios.post(`http://localhost:3000/api/ideas`, {
         title: values.title,
         content: values.content,
-        category: values.category,
+        categories: selectedCategories,
         file: fileData,
 
         // add more data if needed
@@ -148,11 +157,9 @@ export default function AddIdea() {
       }, 1000);
     } catch (error) {
       console.error(error);
-      alert("An error occurred. Please try again.");
     }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
   }
 
   return (
@@ -222,23 +229,33 @@ export default function AddIdea() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
-                    <Select
+                    {/* <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
+                    > */}
+                    <Select
+                      id="category"
+                      {...field}
+                      isMulti
+                      name="category"
+                      options={categories.map((category) => ({
+                        value: category.id,
+                        label: category.name,
+                      }))}
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                    />
+                    {/* <SelectTrigger>
                           <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
+                        </SelectTrigger> */}
+                    {/* <SelectContent>
                         {categories.map((category, index) => (
                           <SelectItem key={category.id} value={category.name}>
                             {category.name}
                           </SelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
+                      </SelectContent> */}
+                    <FormMessage />
                   </FormItem>
                 )}
               />

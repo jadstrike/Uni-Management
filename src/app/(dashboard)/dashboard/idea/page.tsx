@@ -43,28 +43,28 @@ export default async function Page() {
 
   return (
     <>
-      <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
-        <BreadCrumb items={breadcrumbItems} />
-        <div className="flex items-start justify-between">
-          <Heading
-            title={`Ideas (${data.ideas.length})`}
-            description="Ideas submitted by employees for the university."
-          />
+      <ScrollArea className="h-full">
+        <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
+          <BreadCrumb items={breadcrumbItems} />
+          <div className="flex items-start justify-between">
+            <Heading
+              title={`Ideas (${data.ideas.length})`}
+              description="Ideas submitted by employees for the university."
+            />
 
-          <Link
-            href={"/dashboard/idea/add"}
-            className={cn(buttonVariants({ variant: "default" }))}
-          >
-            <Plus className="mr-2 h-4 w-4" /> Add New
-          </Link>
+            <Link
+              href={"/dashboard/idea/add"}
+              className={cn(buttonVariants({ variant: "default" }))}
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add New
+            </Link>
+          </div>
+          <Separator />
+          <main>
+            <IdeaComponent ideas={data} />
+          </main>
         </div>
-        <Separator />
-        <main>
-          <ScrollArea className="h-full">
-            <IdeaComponent />
-          </ScrollArea>
-        </main>
-      </div>
+      </ScrollArea>
     </>
   );
 }

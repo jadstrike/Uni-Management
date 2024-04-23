@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import axios from "axios";
+import IdeaComponent from "@/components/ideas/IdeaComponent";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Idea {
   id: String;
@@ -57,7 +59,11 @@ export default async function Page() {
           </Link>
         </div>
         <Separator />
-        <main></main>
+        <main>
+          <ScrollArea className="h-full">
+            <IdeaComponent />
+          </ScrollArea>
+        </main>
       </div>
     </>
   );

@@ -18,7 +18,6 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       message: "Comment updated successfully",
-      success: true,
       updatedComment,
     });
   } catch (error: any) {
@@ -34,7 +33,6 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({
       message: "Comment deleted successfully",
-      success: true,
       deletedComment,
     });
   } catch (error: any) {

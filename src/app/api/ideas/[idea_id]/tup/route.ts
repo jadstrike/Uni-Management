@@ -1,37 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { $Enums, PrismaClient } from "@prisma/client";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 const prisma = new PrismaClient();
 
 export async function PUT(request: NextRequest) {
+  const ideaId = request.url.split("/")[5];
+
   try {
-    const ideaId = request.url.split("/")[5];
     const userId = await getDataFromToken(request);
     const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
-
     const tupCount = idea?.thumbsUp || 0;
-    const thumbsUp = tupCount + 1;
+    const tdownCount = idea?.thumbsDown || 0;
+    const interaction = await prisma.ideaInteraction.findFirst({
+      where: {
+        userId,
+        ideaId,
+      },
+    });
+
+    if (interaction && interaction.type == $Enums.Interaction.ThumbsUp) {
+      await prisma.ideaInteraction.delete({
+        where: { id: interaction.id },
+      });
+      const data = await prisma.idea.update({
+        where: { id: ideaId },
+        data: { thumbsUp: tupCount - 1 },
+      });
+
+      return NextResponse.json({
+        message: "Thumbs Up is removed",
+        data,
+      });
+    }
+
+    if (interaction && interaction.type == $Enums.Interaction.ThumbsDown) {
+      await prisma.ideaInteraction.update({
+        where: { id: interaction.id },
+        data: { type: $Enums.Interaction.ThumbsUp },
+      });
+
+      const data = await prisma.idea.update({
+        where: { id: ideaId },
+        data: {
+          thumbsDown: tdownCount - 1,
+          thumbsUp: tupCount + 1,
+        },
+      });
+
+      return NextResponse.json({
+        message: "Thumbs Up is added",
+        data,
+      });
+    }
 
     const data = await prisma.idea.update({
       where: { id: ideaId },
       data: {
-        thumbsUp,
+        thumbsUp: tupCount + 1,
         users: {
           create: [
             {
               type: "ThumbsUp",
-              user: {
-                connect: {
-                  id: userId,
-                },
-              },
+              user: { connect: { id: userId } },
             },
           ],
         },
       },
     });
-    return NextResponse.json({ data });
+    return NextResponse.json({
+      message: "Thumbs Up is added",
+      data,
+    });
   } catch (error: any) {
     console.log(error);
     return NextResponse.json({ error: error.message }, { status: 500 });

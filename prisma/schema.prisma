@@ -29,30 +29,32 @@ enum Role {
 }
 
 model Idea {
-  id         String              @id @default(uuid()) @db.Uuid
-  title      String              @db.VarChar(255)
-  createdAt  DateTime            @default(now()) @db.Timestamp(6)
-  content    String
-  authorId   String              @db.Uuid
-  author     User                @relation(fields: [authorId], references: [id])
-  comments   Comment[]
-  categories CategoriesOnIdeas[]
-  file       String?
-  thumbsUp   Int                 @default(0)
-  thumbsDown Int                 @default(0)
-  users      IdeaInteraction[]
-  isHidden   Boolean             @default(false)
+  id            String              @id @default(uuid()) @db.Uuid
+  title         String              @db.VarChar(255)
+  createdAt     DateTime            @default(now()) @db.Timestamp(6)
+  content       String
+  authorId      String              @db.Uuid
+  author        User                @relation(fields: [authorId], references: [id])
+  comments      Comment[]
+  categories    CategoriesOnIdeas[]
+  file          String?
+  thumbsUp      Int                 @default(0)
+  thumbsDown    Int                 @default(0)
+  users         IdeaInteraction[]
+  isHidden      Boolean             @default(false)
+  isByAnonymous Boolean             @default(false)
 }
 
 model Comment {
-  id        String   @id @default(uuid()) @db.Uuid
-  text      String
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  ideaId    String   @db.Uuid
-  idea      Idea     @relation(fields: [ideaId], references: [id])
-  userId    String   @db.Uuid
-  user      User     @relation(fields: [userId], references: [id])
-  isHidden  Boolean  @default(false)
+  id            String   @id @default(uuid()) @db.Uuid
+  text          String
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  ideaId        String   @db.Uuid
+  idea          Idea     @relation(fields: [ideaId], references: [id])
+  userId        String   @db.Uuid
+  user          User     @relation(fields: [userId], references: [id])
+  isHidden      Boolean  @default(false)
+  isByAnonymous Boolean  @default(false)
 }
 
 model Category {
@@ -71,13 +73,12 @@ model CategoriesOnIdeas {
 }
 
 model IdeaInteraction {
+  id     String      @id @default(uuid()) @db.Uuid
   user   User        @relation(fields: [userId], references: [id])
   userId String      @db.Uuid
   idea   Idea        @relation(fields: [ideaId], references: [id])
   ideaId String      @db.Uuid
   type   Interaction
-
-  @@id([userId, ideaId])
 }
 
 enum Interaction {

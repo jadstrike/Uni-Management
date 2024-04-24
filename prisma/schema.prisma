@@ -40,9 +40,11 @@ model Idea {
   file          String?
   thumbsUp      Int                 @default(0)
   thumbsDown    Int                 @default(0)
+  ratio         Int                 @default(0)
   users         IdeaInteraction[]
   isHidden      Boolean             @default(false)
   isByAnonymous Boolean             @default(false)
+  viewCount     Int                 @default(0)
 }
 
 model Comment {

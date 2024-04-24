@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { title, content, categories, file } = reqBody;
+    console.log(categories);
     const authorId = await getDataFromToken(request);
     const user = await prisma.user.findUnique({ where: { id: authorId } });
 

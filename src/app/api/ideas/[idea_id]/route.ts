@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const idea = await prisma.idea.findUnique({
     where: { id },
     include: {
+      author: { select: { name: true } },
       categories: { include: { category: true } },
       comments: true,
     },
@@ -25,7 +26,9 @@ export async function PUT(request: NextRequest) {
     const updatedIdea = await prisma.idea.update({
       where: { id },
       data: { title, content },
-      include: { categories: { include: { category: true } } },
+      include: {
+        categories: { include: { category: true } },
+      },
     });
 
     return NextResponse.json({

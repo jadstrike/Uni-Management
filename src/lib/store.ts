@@ -6,6 +6,14 @@ import { UniqueIdentifier } from "@dnd-kit/core";
 
 export type Status = "TODO" | "IN_PROGRESS" | "DONE";
 
+type UserStore = {
+  userRole: string;
+  setUserRole: (role: string) => void;
+};
+const useStore = create((set) => ({
+  userRole: "",
+  setUserRole: (role: string) => set({ userRole: role }),
+}));
 const defaultCols = [
   {
     id: "TODO" as const,
@@ -55,7 +63,7 @@ export const useTaskStore = create<State & Actions>()(
       updateCol: (id: UniqueIdentifier, newName: string) =>
         set((state) => ({
           columns: state.columns.map((col) =>
-            col.id === id ? { ...col, title: newName } : col,
+            col.id === id ? { ...col, title: newName } : col
           ),
         })),
       addCol: (title: string) =>
@@ -74,6 +82,6 @@ export const useTaskStore = create<State & Actions>()(
       setTasks: (newTasks: Task[]) => set({ tasks: newTasks }),
       setCols: (newCols: Column[]) => set({ columns: newCols }),
     }),
-    { name: "task-store", skipHydration: true },
-  ),
+    { name: "task-store", skipHydration: true }
+  )
 );

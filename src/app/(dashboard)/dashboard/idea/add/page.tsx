@@ -218,6 +218,7 @@ export default function AddIdea() {
                         type="file"
                       />
                     </FormControl>
+                    o
                     <FormMessage />
                   </FormItem>
                 )}

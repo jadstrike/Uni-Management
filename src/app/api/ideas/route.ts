@@ -60,6 +60,7 @@ export async function GET() {
   const ideas = await prisma.idea.findMany({
     where: { isHidden: false },
     include: {
+      author: { select: { name: true } },
       categories: {
         include: {
           category: true,

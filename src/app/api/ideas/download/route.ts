@@ -6,7 +6,17 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const ideas = await prisma.idea.findMany();
+    const ideas = await prisma.idea.findMany({
+      include: {
+        author: { select: { name: true } },
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
 
     if (ideas.length > 0) {
       const csv = parse(ideas);

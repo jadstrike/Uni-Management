@@ -7,7 +7,10 @@ export async function GET(request: NextRequest) {
   const id = request.url.split("ideas/")[1];
   const idea = await prisma.idea.findUnique({
     where: { id },
-    include: { categories: { include: { category: true } } },
+    include: {
+      categories: { include: { category: true } },
+      comments: true,
+    },
   });
 
   return NextResponse.json(idea);

@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { BoardColumn } from "@/components/kanban/board-column";
 import { toast } from "sonner";
 import CommentForm from "@/components/forms/comments/comment-form";
+import DeleteComment from "@/components/forms/comments/delete-comment";
+import { Separator } from "@/components/ui/separator";
 
 type Category = {
   ideaId: string;
@@ -100,8 +102,7 @@ export default async function Page({ params }: any) {
                 No Attachment
               </Badge>
             )}
-            <div className="flex  space-x-2">
-              <h2>Categories</h2>
+            <div className="flex my-2 space-x-2">
               {idea.categories.map((category: Category) => (
                 <span
                   key={category.categoryId}
@@ -111,18 +112,25 @@ export default async function Page({ params }: any) {
                 </span>
               ))}
             </div>
+            <Separator />
+            <div className=" mt-3">
+              <h1 className="text-3xl font-bold mb-4">{idea.title}</h1>
+              <p className="text-gray-500 dark:text-gray-400 mb-8">
+                {idea.content}
+              </p>
+            </div>
           </div>
           <div>
-            <h1 className="text-3xl font-bold mb-4">{idea.title}</h1>
+            {/* <h1 className="text-3xl font-bold mb-4">{idea.title}</h1>
             <p className="text-gray-500 dark:text-gray-400 mb-8">
               {idea.content}
-            </p>
+            </p> */}
             <div className="border-t border-gray-200 dark:border-gray-800 pt-8">
               <h2 className="text-xl font-bold mb-4">Comments</h2>
               <div className="space-y-6">
                 {idea.comments.map((comment: any) => (
                   <div key={comment.id} className="flex items-start gap-4">
-                    <div className="flex-1">
+                    <div className="flex-1 border-2 border-gray-300 p-2 rounded-md">
                       <div className="flex items-center justify-between">
                         <div className="font-medium">
                           {comment.isByAnonymous
@@ -144,11 +152,8 @@ export default async function Page({ params }: any) {
                         {/* <Button size="sm" variant="ghost">
                           <ReplyIcon className="h-4 w-4" />
                           Reply
-                        </Button>
-                        <Button className="ml-auto" size="sm" variant="ghost">
-                          <TrashIcon className="h-4 w-4" />
-                          Delete
                         </Button> */}
+                        <DeleteComment id={idea.id} comment={comment.id} />
                       </div>
                     </div>
                   </div>

@@ -53,6 +53,7 @@ export async function GET() {
   const comments = await prisma.comment.findMany({
     where: { isHidden: false },
     orderBy: { createdAt: "desc" },
+    include: { user: { select: { name: true } } },
   });
 
   return NextResponse.json({ comments });

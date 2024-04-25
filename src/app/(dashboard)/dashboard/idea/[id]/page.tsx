@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FormEvent } from "react";
 import axios from "axios";
 import React from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { BoardColumn } from "@/components/kanban/board-column";
 import { toast } from "sonner";
+import CommentForm from "@/components/forms/comments/comment-form";
 
 type Category = {
   ideaId: string;
@@ -154,7 +156,7 @@ export default async function Page({ params }: any) {
               </div>
               <div className="mt-8">
                 <h3 className="text-lg font-bold mb-4">Add a Comment</h3>
-                <form className="grid gap-4">
+                {/* <form action={onSubmit} className="grid gap-4">
                   <Textarea
                     className="resize-none"
                     placeholder="Write your comment..."
@@ -165,7 +167,8 @@ export default async function Page({ params }: any) {
                       Submit
                     </Button>
                   </div>
-                </form>
+                </form> */}
+                <CommentForm id={idea.id} />
               </div>
             </div>
           </div>

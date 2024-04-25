@@ -37,7 +37,7 @@ export function ClosureDate(closure: any) {
     setId(closure.closure[0].id);
   }, [closure]);
   const changeClosureDate = async (id: any) => {
-    console.log(date);
+    const formattedDate = date?.toISOString();
     try {
       const res = await fetch(`/api/ideas/closure/${id}`, {
         method: "PUT",
@@ -47,7 +47,7 @@ export function ClosureDate(closure: any) {
         body: JSON.stringify({
           initialClosureDate: closure.closure[0].initialClosureDate,
 
-          finalClosureDate: date,
+          finalClosureDate: formattedDate,
         }),
       });
 

@@ -11,6 +11,7 @@ import React from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { BoardColumn } from "@/components/kanban/board-column";
+import { toast } from "sonner";
 
 type Category = {
   ideaId: string;
@@ -61,6 +62,7 @@ export default async function Page({ params }: any) {
     { title: "Ideas", link: "/dashboard/idea" },
     { title: "Details", link: "/dashboard/idea/" },
   ];
+
   return (
     <ScrollArea className="h-full">
       <div className="container mx-auto py-12 px-4 md:px-6">
@@ -156,6 +158,7 @@ export default async function Page({ params }: any) {
                   <Textarea
                     className="resize-none"
                     placeholder="Write your comment..."
+                    name="comment"
                   />
                   <div className="flex items-center justify-end">
                     <Button size="sm" type="submit">

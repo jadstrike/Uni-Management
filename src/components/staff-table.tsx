@@ -7,6 +7,7 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
@@ -33,6 +34,7 @@ interface Staff {
 }
 
 export function StaffTable(staffs: { staffs: Staff[] }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   //BAN USER
@@ -47,6 +49,7 @@ export function StaffTable(staffs: { staffs: Staff[] }) {
       console.log(respone);
 
       toast.success("User has been banned");
+      router.refresh();
       toast.dismiss();
     } catch (error) {
       console.error(error);
@@ -66,6 +69,7 @@ export function StaffTable(staffs: { staffs: Staff[] }) {
       console.log(respone);
 
       toast.success("User has been unbanned");
+      router.refresh();
       toast.dismiss();
     } catch (error) {
       console.error(error);

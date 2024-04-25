@@ -74,7 +74,7 @@ export default function UserAuthForm() {
       // Cookies.set("userData", JSON.stringify(responseData), { expires: 7 }); // Expires in 7 days
       const userRole = responseData.role;
       // store in zustan userRokle
-      const setUserRole = useStore((state: string) => state.setUserRole);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
 
       router.push("/dashboard");
     } else {

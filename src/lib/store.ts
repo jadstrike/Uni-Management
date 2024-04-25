@@ -10,7 +10,7 @@ type UserStore = {
   userRole: string;
   setUserRole: (role: string) => void;
 };
-const useStore = create((set) => ({
+const userStore = create((set) => ({
   userRole: "",
   setUserRole: (role: string) => set({ userRole: role }),
 }));

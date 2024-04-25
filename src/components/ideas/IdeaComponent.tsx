@@ -260,7 +260,7 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
                 </div>
                 <h1 className="text-2xl font-bold mb-2">{idea.title}</h1>
                 <h2 className="text-sm text-gray-500 mb-2">
-                  Uploaded by {idea.id}
+                  Uploaded by {idea.author.name}
                 </h2>
                 <p className=" mb-4">{idea.content}</p>
                 <div className="flex items-center space-x-4 mb-4">

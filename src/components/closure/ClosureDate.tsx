@@ -26,7 +26,7 @@ type ClosureDateProps = {
   closure: Closure[];
 };
 
-export function ClosureDate(closure: any) {
+const ClosureDate = (closure: any) => {
   const router = useRouter();
   const [date, setDate] = useState<Date>();
 
@@ -93,4 +93,5 @@ export function ClosureDate(closure: any) {
       </PopoverContent>
     </Popover>
   );
-}
+};
+export default ClosureDate;

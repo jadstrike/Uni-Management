@@ -9,7 +9,6 @@ export async function GET() {
     include: {
       author: { select: { name: true } },
       categories: { include: { category: true } },
-      comments: true,
     },
   });
 

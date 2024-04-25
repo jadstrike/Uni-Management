@@ -5,10 +5,6 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const id = request.url.split("ideas/")[1];
-  // await prisma.idea.update({
-  //   where: { id },
-  //   data: { viewCount: { increment: 1 } },
-  // });
   const idea = await prisma.idea.findUnique({
     where: { id },
     include: {
@@ -17,9 +13,14 @@ export async function GET(request: NextRequest) {
       comments: true,
     },
   });
+  await prisma.idea.update({
+    where: { id },
+    data: { viewCount: { increment: 1 } },
+  });
 
   return NextResponse.json(idea);
 }
+0;
 
 export async function PUT(request: NextRequest) {
   try {

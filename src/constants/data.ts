@@ -143,6 +143,12 @@ export const navItems: NavItem[] = [
     label: "Categories",
   },
   {
+    title: "Departments",
+    href: "/dashboard/departments",
+    icon: "department",
+    label: "Departments",
+  },
+  {
     title: "Logout",
     href: "/",
     icon: "login",

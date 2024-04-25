@@ -152,10 +152,8 @@ export default function AddIdea() {
       });
       // <Toaster richColors />;
       form.reset();
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     } catch (error) {
+      toast.error("Failed to submit idea");
       console.error(error);
     }
     // Do something with the form values.

@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
@@ -31,7 +32,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import next from "next";
 
 interface Category {
   ideaId: string;
@@ -79,7 +82,7 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
         `http://localhost:3000/api/ideas/${id}/tup`
       );
       alert(response.data.message);
-      toast.success("Idea Thumbed Up", {
+      toast.success(response.data.message, {
         duration: 5000,
       });
       return response.data;
@@ -89,14 +92,24 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
         duration: 5000,
       });
     }
+    revalidatePath("/dashboard/idea");
   };
 
   const thumbsDown = async (id: string) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/ideas/${id}/tdown`
+        `http://localhost:3000/api/ideas/${id}/tdown`,
+        {
+          next: {
+            revalidate: true,
+          },
+        }
       );
       alert(response.data.message);
+      toast.success(response.data.message, {
+        duration: 5000,
+      });
+      // window.location.reload();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -107,7 +120,6 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
   };
 
   const reportIdea = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     try {
       const response = await axios.post(
         `http://localhost:3000/api/ideas/${values.id}/report`,
@@ -117,7 +129,6 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
           // add more data if needed
         }
       );
-      console.log(response.data);
       toast.success("Idea reported successfully", {
         duration: 5000,
       });
@@ -255,21 +266,23 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
                 <div className="flex items-center space-x-4 mb-4">
                   <Link
                     className="text-blue-500 hover:underline"
-                    href={idea.file === null ? "No Attachment" : idea.file}
+                    href={idea.file === null ? "#" : idea.file}
                   >
-                    View Attachment
+                    {idea.file === null ? "No Attachment" : "Attachment"}
                   </Link>
                   <span className="text-gray-500 dark:text-gray-400">
                     {format(new Date(idea.createdAt), "MM/dd/yyyy")}
                   </span>
                 </div>
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4"></div>
-                <Button
-                  className=" dark:bg-green-100 dark:text-black"
-                  variant="outline"
-                >
-                  View Details
-                </Button>
+                <Link href={`/dashboard/idea/${idea.id}`}>
+                  <Button
+                    className=" dark:bg-green-100 dark:text-black"
+                    variant="outline"
+                  >
+                    View Details
+                  </Button>
+                </Link>
               </div>
             </div>
           ))}

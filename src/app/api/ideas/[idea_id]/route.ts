@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     include: {
       author: { select: { name: true } },
       categories: { include: { category: true } },
-      comments: true,
+      comments: { include: { user: { select: { name: true } } } },
     },
   });
   await prisma.idea.update({

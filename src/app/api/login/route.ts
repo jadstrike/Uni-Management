@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       role,
     });
     response.cookies.set("token", token, { httpOnly: true });
+    response.cookies.set("role", role, { httpOnly: true });
 
     return response;
   } catch (error: any) {

@@ -13,10 +13,6 @@ export async function GET(request: NextRequest) {
       comments: { include: { user: { select: { name: true } } } },
     },
   });
-  await prisma.idea.update({
-    where: { id },
-    data: { viewCount: { increment: 1 } },
-  });
 
   return NextResponse.json(idea);
 }

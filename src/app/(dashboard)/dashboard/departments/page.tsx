@@ -183,7 +183,7 @@ const Departments = () => {
               <Dialog key={index}>
                 <DialogTrigger asChild>
                   <Button
-                    onClick={() => form.setValue("id", department.id)}
+                    // onClick={() => form.setValue("id", department.id)}
                     variant="outline"
                   >
                     {department.name}

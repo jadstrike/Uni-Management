@@ -18,7 +18,7 @@ import { buttonVariants } from "@/components/ui/button";
 import axios from "axios";
 import IdeaComponent from "@/components/ideas/IdeaComponent";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ClosureDate } from "@/components/closure/ClosureDate";
+import ClosureDate from "@/components/closure/ClosureDate";
 
 interface Idea {
   id: String;

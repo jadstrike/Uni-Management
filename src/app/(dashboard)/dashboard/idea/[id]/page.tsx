@@ -4,6 +4,7 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Edit2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import format from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FormEvent } from "react";
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 import CommentForm from "@/components/forms/comments/comment-form";
 import DeleteComment from "@/components/forms/comments/delete-comment";
 import { Separator } from "@/components/ui/separator";
+import EditCommentForm from "@/components/forms/comments/edit-comment-form";
 
 type Category = {
   ideaId: string;
@@ -138,17 +140,19 @@ export default async function Page({ params }: any) {
                             : comment.user.name}
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                          1 week ago
+                          {new Date(comment.createdAt).toLocaleString()}
                         </div>
                       </div>
                       <p className="text-gray-500 dark:text-gray-400">
                         {comment.text}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
-                        <Button className=" " size="sm" variant="ghost">
-                          <Edit2Icon className="h-4 w-4 " />
-                          <p className=" pl-2">Edit</p>
-                        </Button>
+                        <EditCommentForm
+                          id={idea.id}
+                          commentId={comment.id}
+                          comment={comment.text}
+                        />
+
                         {/* <Button size="sm" variant="ghost">
                           <ReplyIcon className="h-4 w-4" />
                           Reply

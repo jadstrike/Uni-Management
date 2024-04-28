@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useStore } from "zustand";
 import { toast } from "sonner";
 import {
   Form,
@@ -73,6 +72,10 @@ export default function UserAuthForm() {
 
       // Cookies.set("userData", JSON.stringify(responseData), { expires: 7 }); // Expires in 7 days
       const userRole = responseData.role;
+      // cookies().set("role", userRole);
+
+      // const role = useStore((state) => state.setUserRole(userRole));
+
       // store in zustan userRokle
       // eslint-disable-next-line react-hooks/rules-of-hooks
 

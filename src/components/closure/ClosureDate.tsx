@@ -38,6 +38,7 @@ const ClosureDate = (closure: any) => {
   }, [closure]);
   const changeClosureDate = async (id: any) => {
     const formattedDate = date?.toISOString();
+    console.log("formatted Date", formattedDate);
     try {
       const res = await fetch(`/api/ideas/closure/${id}`, {
         method: "PUT",

@@ -21,26 +21,46 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/toaster";
 import IdeaComponent from "@/components/ideas/IdeaComponent";
 import MostViewedIdea from "@/components/ideas/MostViwedIdea";
+import { count } from "console";
+import PageLoading from "./loading";
 
 export default function Page() {
   const [mostViewedIdeas, setMostViewedIdeas] = useState();
+  const [loading, setLoading] = useState(false);
+  const [counts, setCounts] = useState();
 
   useEffect(() => {
     // Fetch the most-viewed ideas when the component mounts
     const fetchMostViewedIdeas = async () => {
+      setLoading(true);
       try {
+        setLoading(false);
         const response = await axios.get("/api/ideas/most-viewed");
         toast.success("Most viewed ideas fetched successfully", {
           duration: 5000,
         });
         setMostViewedIdeas(response.data); // Update state with the fetched ideas
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching most-viewed ideas:", error);
         // Handle error, e.g., show notification
       }
     };
 
     fetchMostViewedIdeas();
+  }, []);
+
+  useEffect(() => {
+    const getCounts = async () => {
+      try {
+        const response = await axios.get("/api/get-counts");
+        console.log(response.data);
+        setCounts(response.data);
+      } catch (error) {
+        console.error("Error fetching counts:", error);
+      }
+    };
+    getCounts();
   }, []);
   // console.log(mostViewedIdeas.mostViewedIdeas);
   const handleDownload = async () => {
@@ -98,7 +118,9 @@ export default function Page() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">13</div>
+                  <div className="text-2xl font-bold">
+                    {counts?.ideaCount ?? ""}
+                  </div>
                 </CardContent>
               </Card>
               <Card>
@@ -108,7 +130,9 @@ export default function Page() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">8</div>
+                  <div className="text-2xl font-bold">
+                    {counts?.staffCount ?? ""}
+                  </div>
                 </CardContent>
               </Card>
               <Card>
@@ -131,7 +155,9 @@ export default function Page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">8</div>
+                  <div className="text-2xl font-bold">
+                    {counts?.commentCount ?? ""}
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -147,8 +173,12 @@ export default function Page() {
             </div>
           </TabsContent>
         </Tabs>
-        {mostViewedIdeas !== undefined && (
-          <MostViewedIdea ideas={mostViewedIdeas} />
+        {loading ? (
+          <h2>Loading...</h2>
+        ) : (
+          mostViewedIdeas !== undefined && (
+            <MostViewedIdea ideas={mostViewedIdeas} />
+          )
         )}
       </div>
     </ScrollArea>

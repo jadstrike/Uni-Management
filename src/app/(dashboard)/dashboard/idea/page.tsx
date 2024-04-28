@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-import { isToday } from "date-fns";
+import { isToday, isPast } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -65,7 +65,9 @@ export default async function Page() {
   // });
   const closureDate = new Date(resDate.closure[0].finalClosureDate);
   const isClosureDateToday = isToday(closureDate);
+  const isClosreDatePassed = isPast(closureDate);
   console.log(isClosureDateToday);
+  console.log("is past" + isClosreDatePassed);
 
   return (
     <>
@@ -79,11 +81,11 @@ export default async function Page() {
             />
 
             <Link
-              href={isClosureDateToday ? "#" : "/dashboard/idea/add"}
+              href={isClosreDatePassed ? "#" : "/dashboard/idea/add"}
               className={cn(buttonVariants({ variant: "default" }))}
             >
               <Plus className="mr-2 h-4 w-4" />
-              {isClosureDateToday ? "Passed closure date" : "Add New"}
+              {isClosreDatePassed ? "Passed closure date" : "Add New"}
             </Link>
           </div>
           <Separator />

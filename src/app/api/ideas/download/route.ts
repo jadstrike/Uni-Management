@@ -20,7 +20,14 @@ export async function GET() {
 
     if (ideas.length > 0) {
       const csv = parse(ideas);
-      return NextResponse.json(csv);
+
+      // Set the response headers for CSV
+      const headers = {
+        "Content-Type": "text/csv",
+        "Content-Disposition": "attachment; filename=ideas.csv",
+      };
+
+      return NextResponse.json(csv, { headers });
     } else {
       console.log("Ideas not found.");
     }

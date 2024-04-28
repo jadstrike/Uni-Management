@@ -27,7 +27,7 @@ export async function GET() {
         "Content-Disposition": "attachment; filename=ideas.csv",
       };
 
-      return NextResponse.json(csv, { headers });
+      return new NextResponse(csv, { headers });
     } else {
       console.log("Ideas not found.");
     }

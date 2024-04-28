@@ -7,7 +7,12 @@ export async function GET() {
   const mostViewedIdeas = await prisma.idea.findMany({
     orderBy: { viewCount: "desc" },
     include: {
-      author: { select: { name: true } },
+      author: {
+        select: {
+          name: true,
+          role: true,
+        },
+      },
       categories: { include: { category: true } },
     },
   });

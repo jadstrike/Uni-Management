@@ -5,13 +5,13 @@ const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
-  const { initial, final } = reqBody;
+  const { initialClosureDate, finalClosureDate } = reqBody;
 
   try {
     const closure = await prisma.closureDate.create({
       data: {
-        initialClosureDate: initial,
-        finalClosureDate: final,
+        initialClosureDate,
+        finalClosureDate,
       },
     });
 

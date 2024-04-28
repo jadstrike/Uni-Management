@@ -22,7 +22,9 @@ import EditCommentForm from "@/components/forms/comments/edit-comment-form";
 type Category = {
   ideaId: string;
   categoryId: string;
-  category: object; // Replace with the actual type if known
+  category: {
+    name: string;
+  }; // Replace with the actual type if known
 };
 type comments = {
   id: string;
@@ -150,17 +152,17 @@ export default async function Page({ params }: any) {
                         {comment.text}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
-                        {/* <EditCommentForm
+                        <EditCommentForm
                           id={idea.id}
                           commentId={comment.id}
                           comment={comment.text}
-                        /> */}
+                        />
 
                         {/* <Button size="sm" variant="ghost">
                           <ReplyIcon className="h-4 w-4" />
                           Reply
                         </Button> */}
-                        {/* <DeleteComment id={idea.id} comment={comment.id} /> */}
+                        <DeleteComment id={idea.id} comment={comment.id} />
                       </div>
                     </div>
                   </div>

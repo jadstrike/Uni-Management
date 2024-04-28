@@ -23,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Edit2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -30,6 +31,7 @@ import { toast } from "sonner";
 import { text } from "stream/consumers";
 
 const EditCommentForm = (props: any) => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const formSchema = z.object({
     comment: z.string().min(2).max(200),
@@ -40,14 +42,15 @@ const EditCommentForm = (props: any) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      comment: props.comment,
+      comment: "",
     },
   });
 
-  const reportIdea = async (values: z.infer<typeof formSchema>) => {
+  async function editComment(values: z.infer<typeof formSchema>) {
     console.log(values);
+    setLoading(true);
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `http://localhost:3000/api/ideas/${props.id}/comments/${props.commentId}`,
         {
           text: values.comment,
@@ -59,8 +62,10 @@ const EditCommentForm = (props: any) => {
       toast.success(response.data.message, {
         duration: 5000,
       });
+      setLoading(false);
       router.refresh();
     } catch (error) {
+      setLoading(false);
       console.error(error);
       toast.error(
         "Idea could not be reported, Something wrong with the server",
@@ -69,53 +74,53 @@ const EditCommentForm = (props: any) => {
         }
       );
     }
-  };
+  }
   return (
-    <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className=" text-blue-500" variant="outline">
-            Edit Comment
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(reportIdea)}
-              className="space-y-8 w-full"
-            >
-              <DialogHeader>
-                <DialogTitle>Editing Comment: {props.comment}</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className=" items-center gap-4">
-                  <FormField
-                    control={form.control}
-                    name="comment"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className=" text-lg">New Comment</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            id="comment"
-                            className="col-span-3"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+    <Dialog>
+      <Toaster />
+      <DialogTrigger asChild>
+        <Button className=" text-blue-500" variant="outline">
+          Edit Comment
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(editComment)}
+            className="space-y-8 w-full"
+          >
+            <DialogHeader>
+              <DialogTitle>Editing Comment: {props.comment}</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className=" items-center gap-4">
+                <FormField
+                  control={form.control}
+                  name="comment"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className=" text-lg">New Comment</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          name="comment"
+                          id="comment"
+                          className="col-span-3"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <DialogFooter>
-                <Button type="submit">Save Changes</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </div>
+            </div>
+            <Button type="submit">
+              {loading ? "Saving changes" : "Save changes"}
+            </Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

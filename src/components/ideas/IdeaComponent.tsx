@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import next from "next";
+import { useState } from "react";
 
 interface Category {
   ideaId: string;
@@ -51,6 +52,9 @@ interface Idea {
   createdAt: string;
   content: string;
   authorId: string;
+  author: {
+    name: string;
+  };
   file: string;
   thumbsUp: number;
   thumbsDown: number;
@@ -60,7 +64,7 @@ interface Idea {
 }
 
 interface IdeaComponentProps {
-  ideas: Idea[];
+  ideas: { ideas: Idea[] };
 }
 const formSchema = z.object({
   message: z.string().min(2).max(200),
@@ -68,6 +72,24 @@ const formSchema = z.object({
 });
 
 const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
+  const router = useRouter();
+  const pageSize = 5;
+
+  const totalIdeas = data.ideas.ideas.length;
+  const totalPages = Math.ceil(totalIdeas / pageSize);
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexOfLastIdea = currentPage * pageSize;
+  const indexOfFirstIdea = indexOfLastIdea - pageSize;
+
+  // Get the current ideas to display
+  const currentIdeas = data.ideas.ideas.slice(
+    indexOfFirstIdea,
+    indexOfLastIdea
+  );
+
+  // Function to handle page change
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,10 +103,12 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
       const response = await axios.put(
         `http://localhost:3000/api/ideas/${id}/tup`
       );
-      alert(response.data.message);
+      // alert(response.data.message);
       toast.success(response.data.message, {
         duration: 5000,
       });
+      router.refresh();
+
       return response.data;
     } catch (error) {
       console.error(error);
@@ -92,7 +116,7 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
         duration: 5000,
       });
     }
-    revalidatePath("/dashboard/idea");
+    // revalidatePath("/dashboard/idea");
   };
 
   const thumbsDown = async (id: string) => {
@@ -105,11 +129,12 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
           },
         }
       );
-      alert(response.data.message);
+      // alert(response.data.message);
       toast.success(response.data.message, {
         duration: 5000,
       });
       // window.location.reload();
+      router.refresh();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -164,8 +189,11 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
       <Toaster position="top-center" richColors />
       <div className="w-full px-4 py-8 sm:px-6 md:max-w-6xl md:mx-auto md:py-12">
         <h1 className="text-3xl font-bold mb-6"> All Ideas</h1>
+        <p className="text-center mb-4">
+          Page {currentPage} of {totalPages} (Showing {pageSize} ideas per page)
+        </p>
         <div className="grid gap-8">
-          {data.ideas.ideas.map((idea: Idea) => (
+          {currentIdeas.map((idea: Idea) => (
             <div
               key={idea.id}
               className="bg-white border-2 border-gray-400 rounded-lg shadow-md overflow-hidden dark:bg-gray-800"
@@ -286,6 +314,20 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
               </div>
             </div>
           ))}
+        </div>
+        <div className="flex justify-center md:flex-row flex-col space-x-4 mt-8">
+          <Button
+            disabled={currentPage === 1}
+            onClick={() => paginate(currentPage - 1)}
+          >
+            Previous
+          </Button>
+          <Button
+            disabled={currentPage * pageSize >= data.ideas.ideas.length}
+            onClick={() => paginate(currentPage + 1)}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </ScrollArea>

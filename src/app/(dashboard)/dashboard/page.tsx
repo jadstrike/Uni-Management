@@ -7,6 +7,7 @@ import axios from "axios";
 import { Overview } from "@/components/overview";
 import { RecentSales } from "@/components/recent-sales";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,8 +19,30 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/toaster";
+import IdeaComponent from "@/components/ideas/IdeaComponent";
+import MostViewedIdea from "@/components/ideas/MostViwedIdea";
 
 export default function Page() {
+  const [mostViewedIdeas, setMostViewedIdeas] = useState();
+
+  useEffect(() => {
+    // Fetch the most-viewed ideas when the component mounts
+    const fetchMostViewedIdeas = async () => {
+      try {
+        const response = await axios.get("/api/ideas/most-viewed");
+        toast.success("Most viewed ideas fetched successfully", {
+          duration: 5000,
+        });
+        setMostViewedIdeas(response.data); // Update state with the fetched ideas
+      } catch (error) {
+        console.error("Error fetching most-viewed ideas:", error);
+        // Handle error, e.g., show notification
+      }
+    };
+
+    fetchMostViewedIdeas();
+  }, []);
+  // console.log(mostViewedIdeas.mostViewedIdeas);
   const handleDownload = async () => {
     try {
       const response = await axios.get("/api/ideas/download", {
@@ -124,6 +147,9 @@ export default function Page() {
             </div>
           </TabsContent>
         </Tabs>
+        {mostViewedIdeas !== undefined && (
+          <MostViewedIdea ideas={mostViewedIdeas} />
+        )}
       </div>
     </ScrollArea>
   );

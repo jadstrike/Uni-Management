@@ -54,7 +54,7 @@ const ClosureDate = (closure: any) => {
       if (!res.ok) {
         throw new Error("Failed to update closure date");
       }
-      toast.success("Closure date updated successfully");
+      toast.success(res.statusText);
 
       // Handle successful response here
       router.refresh();

@@ -1,5 +1,6 @@
 import BreadCrumb from "@/components/breadcrumb";
 import { cookies } from "next/headers";
+import format from "date-fns/format";
 
 import {
   Card,
@@ -22,6 +23,7 @@ import IdeaComponent from "@/components/ideas/IdeaComponent";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ClosureDate from "@/components/closure/ClosureDate";
 import { any } from "zod";
+import { revalidatePath } from "next/cache";
 
 interface Idea {
   id: String;
@@ -34,12 +36,14 @@ interface Idea {
 // import { users } from "@/constants/data";
 async function getIdeas() {
   const response = await axios.get("http://localhost:3000/api/ideas");
+  console.log(response.data);
 
   return response.data;
 }
 
 async function getClosureDate() {
   const response = await axios.get("http://localhost:3000/api/ideas/closure");
+  console.log(response.data);
   return response.data;
 }
 
@@ -59,11 +63,17 @@ export default async function Page() {
   // }, []);
   const data = await getIdeas();
   const resDate = await getClosureDate();
+  // revalidatePath("/dashboard/idea");
   // const ideas = await getRecipes();
   // const ideas = await fetch("/api/ideas", {
   //   method: "GET",
   // });
-  const closureDate = new Date(resDate.closure[0].finalClosureDate);
+  const simpleFinalClosureDate = resDate.closure[0].finalClosureDate;
+  const closureDate = new Date(simpleFinalClosureDate);
+  const humanReadableClosureDate = simpleFinalClosureDate
+    ? format(closureDate, "MMMM do, yyyy")
+    : "No closure date set";
+  console.log("Formatted Closure Date" + closureDate);
   const isClosureDateToday = isToday(closureDate);
   const isClosreDatePassed = isPast(closureDate);
   console.log(isClosureDateToday);
@@ -90,7 +100,11 @@ export default async function Page() {
           </div>
           <Separator />
           <div className=" text-red-500">Closure Date</div>
-          <div className="text-lg text-blue-400">{closureDate.toString()}</div>
+          <div className="text-lg text-blue-400">
+            {humanReadableClosureDate +
+              " :ComputerData" +
+              simpleFinalClosureDate}
+          </div>
           {userRole === "Admin" && <ClosureDate closure={resDate.closure} />}
           <main>
             <IdeaComponent ideas={data} userRole={userRole} />

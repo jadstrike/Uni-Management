@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { AnyPtrRecord } from "dns";
 import { toast } from "sonner";
+import axios from "axios";
 
 type Closure = {
   id: string;
@@ -33,36 +34,49 @@ const ClosureDate = (closure: any) => {
   const [id, setId] = useState();
 
   useEffect(() => {
-    setDate(new Date(closure.closure[0].finalClosureDate));
+    // setDate(new Date(closure.closure[0].finalClosureDate));
     setId(closure.closure[0].id);
   }, [closure]);
   const changeClosureDate = async (id: any) => {
     const formattedDate = date?.toISOString();
     console.log("formatted Date", formattedDate);
     try {
-      const res = await fetch(`/api/ideas/closure/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          initialClosureDate: closure.closure[0].initialClosureDate,
-
-          finalClosureDate: formattedDate,
-        }),
+      const res = await axios.put(`/api/ideas/closure/${id}`, {
+        initialClosureDate: closure.closure[0].initialClosureDate,
+        finalClosureDate: formattedDate,
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to update closure date");
-      }
+      console.log(res);
       toast.success(res.statusText);
-
-      // Handle successful response here
       router.refresh();
     } catch (error) {
-      // Handle error here
       console.error(error);
+      toast.error("Failed to update closure date");
     }
+    // try {
+    //   const res = await fetch(`/api/ideas/closure/${id}`, {
+    //     method: "PUT",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       initialClosureDate: closure.closure[0].initialClosureDate,
+
+    //       finalClosureDate: formattedDate,
+    //     }),
+    //   });
+
+    //   if (!res.ok) {
+    //     throw new Error("Failed to update closure date");
+    //   }
+    //   console.log(res);
+    //   toast.success(res.statusText);
+
+    //   // Handle successful response here
+    //   router.refresh();
+    // } catch (error) {
+    //   // Handle error here
+    //   console.error(error);
+    // }
   };
 
   //   console.log(closure.closure[0]);

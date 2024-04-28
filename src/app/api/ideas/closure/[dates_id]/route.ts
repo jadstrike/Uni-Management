@@ -6,14 +6,15 @@ const prisma = new PrismaClient();
 export async function PUT(request: NextRequest) {
   const id = request.url.split("/")[6];
   const reqBody = await request.json();
-  const { initial, final } = reqBody;
+  console.log(reqBody);
+  const { initialClosureDate, finalClosureDate } = reqBody;
 
   try {
     const updatedDates = await prisma.closureDate.update({
       where: { id },
       data: {
-        initialClosureDate: initial,
-        finalClosureDate: final,
+        initialClosureDate,
+        finalClosureDate,
       },
     });
 

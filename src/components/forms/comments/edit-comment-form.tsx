@@ -32,7 +32,7 @@ import { text } from "stream/consumers";
 const EditCommentForm = (props: any) => {
   const router = useRouter();
   const formSchema = z.object({
-    message: z.string().min(2).max(200),
+    comment: z.string().min(2).max(200),
     id: z.string(),
     text: z.string(),
   });
@@ -40,7 +40,7 @@ const EditCommentForm = (props: any) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      message: props.comment,
+      comment: props.comment,
     },
   });
 
@@ -50,7 +50,7 @@ const EditCommentForm = (props: any) => {
       const response = await axios.post(
         `http://localhost:3000/api/ideas/${props.id}/comments/${props.commentId}`,
         {
-          text: values.message,
+          text: values.comment,
 
           // add more data if needed
         }
@@ -91,14 +91,14 @@ const EditCommentForm = (props: any) => {
                 <div className=" items-center gap-4">
                   <FormField
                     control={form.control}
-                    name="message"
+                    name="comment"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className=" text-lg">New Comment</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            id="message"
+                            id="comment"
                             className="col-span-3"
                           />
                         </FormControl>

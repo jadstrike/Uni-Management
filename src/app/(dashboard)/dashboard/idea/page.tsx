@@ -1,4 +1,6 @@
 import BreadCrumb from "@/components/breadcrumb";
+import { cookies } from "next/headers";
+
 import {
   Card,
   CardContent,
@@ -19,6 +21,7 @@ import axios from "axios";
 import IdeaComponent from "@/components/ideas/IdeaComponent";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ClosureDate from "@/components/closure/ClosureDate";
+import { any } from "zod";
 
 interface Idea {
   id: String;
@@ -42,6 +45,18 @@ async function getClosureDate() {
 
 const breadcrumbItems = [{ title: "Ideas", link: "/dashboard/user" }];
 export default async function Page() {
+  const cookieStore = cookies();
+
+  const role = cookieStore.get("role");
+  const userRole = role?.value;
+  console.log(userRole);
+  // const [userRole, setUserRole] = useState<string | undefined>(undefined);
+
+  // useEffect(() => {
+  //   // Get the user's role from cookies when the component mounts
+  //   const role = getCookie("role");
+  //   setUserRole(role);
+  // }, []);
   const data = await getIdeas();
   const resDate = await getClosureDate();
   // const ideas = await getRecipes();
@@ -73,9 +88,10 @@ export default async function Page() {
           </div>
           <Separator />
           <div className=" text-red-500">Closure Date</div>
-          <ClosureDate closure={resDate.closure} />
+          <div className="text-lg text-blue-400">{closureDate.toString()}</div>
+          {userRole === "Admin" && <ClosureDate closure={resDate.closure} />}
           <main>
-            <IdeaComponent ideas={data} />
+            <IdeaComponent ideas={data} userRole={userRole} />
           </main>
         </div>
       </ScrollArea>

@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import next from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Category {
   ideaId: string;
@@ -65,13 +65,32 @@ interface Idea {
 
 interface IdeaComponentProps {
   ideas: { ideas: Idea[] };
+  userRole: string;
 }
 const formSchema = z.object({
   message: z.string().min(2).max(200),
   id: z.string(),
 });
 
+// function getCookie(name: any) {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop().split(";").shift();
+//   return null;
+// }
+
 const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
+  // const [userRole, setUserRole] = useState<string | undefined>(undefined);
+
+  // useEffect(() => {
+  //   // Get the user's role from cookies when the component mounts
+  //   const role = getCookie("role");
+  //   console.log(role);
+
+  //   setUserRole(role);
+  // }, []);
+
+  // console.log(userRole);
   const router = useRouter();
   const pageSize = 5;
 
@@ -189,7 +208,21 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
       <Toaster position="top-center" richColors />
       <div className="w-full px-4 py-8 sm:px-6 md:max-w-6xl md:mx-auto md:py-12">
         <h1 className="text-3xl font-bold mb-6"> All Ideas</h1>
-        <p className="text-center mb-4">
+        <div className="flex justify-center md:flex-row flex-col space-x-4 mt-8">
+          <Button
+            disabled={currentPage === 1}
+            onClick={() => paginate(currentPage - 1)}
+          >
+            Previous
+          </Button>
+          <Button
+            disabled={currentPage * pageSize >= data.ideas.ideas.length}
+            onClick={() => paginate(currentPage + 1)}
+          >
+            Next
+          </Button>
+        </div>
+        <p className="text-center mb-1  mt-4">
           Page {currentPage} of {totalPages} (Showing {pageSize} ideas per page)
         </p>
         <div className="grid gap-8">
@@ -315,7 +348,7 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
             </div>
           ))}
         </div>
-        <div className="flex justify-center md:flex-row flex-col space-x-4 mt-8">
+        {/* <div className="flex justify-center md:flex-row flex-col space-x-4 mt-8">
           <Button
             disabled={currentPage === 1}
             onClick={() => paginate(currentPage - 1)}
@@ -328,7 +361,7 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
           >
             Next
           </Button>
-        </div>
+        </div> */}
       </div>
     </ScrollArea>
   );

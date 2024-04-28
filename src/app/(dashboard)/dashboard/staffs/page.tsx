@@ -1,4 +1,5 @@
 import BreadCrumb from "@/components/breadcrumb";
+import { cookies } from "next/headers";
 import { StaffTable } from "@/components/staff-table";
 import { columns } from "@/components/tables/employee-tables/columns";
 import { EmployeeTable } from "@/components/tables/employee-tables/employee-table";
@@ -24,6 +25,9 @@ export default async function page({ searchParams }: paramsProps) {
   const pageLimit = Number(searchParams.limit) || 10;
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
+  const cookieStore = cookies();
+  const role = cookieStore.get("role");
+  const userRole = role?.value;
 
   // const res = await fetch(
   //   `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
@@ -61,7 +65,7 @@ export default async function page({ searchParams }: paramsProps) {
         </div>
         <Separator />
 
-        <StaffTable staffs={staffs} />
+        <StaffTable staffs={staffs} userRole={userRole} />
       </div>
     </>
   );

@@ -3,6 +3,7 @@ import { CalendarDateRangePicker } from "@/components/date-range-picker";
 import { useEffect } from "react";
 import { NextRequest } from "next/server";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { Overview } from "@/components/overview";
 import { RecentSales } from "@/components/recent-sales";
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,36 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 
 export default function Page() {
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get("/api/ideas/download", {
+        responseType: "blob", // Important: This tells Axios to handle the response as a Blob
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "ideas.csv"); // or any other extension
+      document.body.appendChild(link);
+      link.click();
+      if (link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
+      toast.success(
+        "Ideas downloaded successfully. Check your browser downloads folder",
+        {
+          duration: 5000,
+        }
+      );
+    } catch (error) {
+      toast.error("Error downloading the ideas. Please try again later.", {
+        duration: 5000,
+      });
+      console.error("Error downloading the ideas:", error);
+    }
+  };
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -25,7 +54,7 @@ export default function Page() {
             Hi, Welcome back!
           </h2>
           <div className="hidden md:flex items-center space-x-2">
-            <Button>Download Ideas</Button>
+            <Button onClick={handleDownload}>Download Ideas</Button>
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">

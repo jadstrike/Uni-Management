@@ -63,13 +63,13 @@ export default async function Page() {
               description="Ideas submitted by employees for the university."
             />
 
-            <Link
+            {/* <Link
               href={isClosureDateToday ? "#" : "/dashboard/idea/add"}
               className={cn(buttonVariants({ variant: "default" }))}
             >
               <Plus className="mr-2 h-4 w-4" />
               {isClosureDateToday ? "Passed closure date" : "Add New"}
-            </Link>
+            </Link> */}
           </div>
           <Separator />
           <div className=" text-red-500">Closure Date</div>

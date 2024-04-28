@@ -104,6 +104,9 @@ export default async function Page({ params }: any) {
                 No Attachment
               </Badge>
             )}
+            <h2 className=" text-orange-400">
+              Authored by : {idea.author.name}
+            </h2>
             <div className="flex my-2 space-x-2">
               {idea.categories.map((category: Category) => (
                 <span
@@ -147,17 +150,17 @@ export default async function Page({ params }: any) {
                         {comment.text}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
-                        <EditCommentForm
+                        {/* <EditCommentForm
                           id={idea.id}
                           commentId={comment.id}
                           comment={comment.text}
-                        />
+                        /> */}
 
                         {/* <Button size="sm" variant="ghost">
                           <ReplyIcon className="h-4 w-4" />
                           Reply
                         </Button> */}
-                        <DeleteComment id={idea.id} comment={comment.id} />
+                        {/* <DeleteComment id={idea.id} comment={comment.id} /> */}
                       </div>
                     </div>
                   </div>

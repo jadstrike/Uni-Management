@@ -33,7 +33,8 @@ interface Staff {
   department: { name: string };
 }
 
-export function StaffTable(staffs: { staffs: Staff[] }) {
+export function StaffTable(staffs: { staffs: Staff[]; userRole: string }) {
+  console.log(staffs.userRole);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -86,6 +87,7 @@ export function StaffTable(staffs: { staffs: Staff[] }) {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Email</TableHead>
               <TableHead>Department</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -95,37 +97,40 @@ export function StaffTable(staffs: { staffs: Staff[] }) {
               <TableRow key={staff.id}>
                 <TableCell className="font-medium">{staff.name}</TableCell>
                 <TableCell>{staff.role}</TableCell>
+                <TableCell>{staff.email}</TableCell>
                 <TableCell>
                   {staff.department !== null && staff.department !== undefined
                     ? staff.department.name
                     : "No Department"}
                 </TableCell>
-                <TableCell className="text-right space-x-2">
-                  {staff.isBanned ? (
-                    <Button
-                      onClick={() => unbanUser(staff.id)}
-                      size="sm"
-                      variant="outline"
-                    >
-                      Unban
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => banUser(staff.id)}
-                      color="red"
-                      size="sm"
-                      variant="outline"
-                    >
-                      {loading ? "Banning..." : "Ban"}
-                    </Button>
-                  )}
-                </TableCell>
+                {staffs.userRole !== "Staff" && (
+                  <TableCell className="text-right space-x-2">
+                    {staff.isBanned ? (
+                      <Button
+                        onClick={() => unbanUser(staff.id)}
+                        size="sm"
+                        variant="outline"
+                      >
+                        Unban
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => banUser(staff.id)}
+                        color="red"
+                        size="sm"
+                        variant="outline"
+                      >
+                        {loading ? "Banning..." : "Ban"}
+                      </Button>
+                    )}
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      <div className="flex justify-center mt-4">
+      {/* <div className="flex justify-center mt-4">
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -148,7 +153,7 @@ export function StaffTable(staffs: { staffs: Staff[] }) {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      </div>
+      </div> */}
     </div>
   );
 }

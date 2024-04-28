@@ -181,7 +181,7 @@ const Departments = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-8">
             {departments.map((department: Department, index: Key) => (
               <Dialog key={index}>
-                <DialogTrigger asChild>
+                <DialogTrigger disabled asChild>
                   <Button
                     // onClick={() => form.setValue("id", department.id)}
                     variant="outline"

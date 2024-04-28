@@ -65,7 +65,6 @@ interface Idea {
 
 interface IdeaComponentProps {
   ideas: { ideas: Idea[] };
-  userRole: string;
 }
 const formSchema = z.object({
   message: z.string().min(2).max(200),
@@ -79,10 +78,11 @@ const formSchema = z.object({
 //   return null;
 // }
 
-const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
+const MostViewedIdea = (data: any) => {
   // const [userRole, setUserRole] = useState<string | undefined>(undefined);
+  //   console.log(data.ideas.mostViewedIdeas);
 
-  // useEffect(() => {
+  // useEffect(() =>
   //   // Get the user's role from cookies when the component mounts
   //   const role = getCookie("role");
   //   console.log(role);
@@ -94,14 +94,14 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
   const router = useRouter();
   const pageSize = 5;
 
-  const totalIdeas = data.ideas.ideas.length;
+  const totalIdeas = data.ideas.mostViewedIdeas.length;
   const totalPages = Math.ceil(totalIdeas / pageSize);
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastIdea = currentPage * pageSize;
   const indexOfFirstIdea = indexOfLastIdea - pageSize;
 
   // Get the current ideas to display
-  const currentIdeas = data.ideas.ideas.slice(
+  const currentIdeas = data.ideas.mostViewedIdeas.slice(
     indexOfFirstIdea,
     indexOfLastIdea
   );
@@ -207,7 +207,7 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
     <ScrollArea className="h-full">
       <Toaster position="top-center" richColors />
       <div className="w-full px-4 py-8 sm:px-6 md:max-w-6xl md:mx-auto md:py-12">
-        <h1 className="text-3xl font-bold mb-6"> All Ideas</h1>
+        <h1 className="text-3xl font-bold mb-6"> Most Viewed Ideas</h1>
         <div className="flex justify-center md:flex-row flex-col space-x-4 mt-8">
           <Button
             disabled={currentPage === 1}
@@ -216,7 +216,9 @@ const IdeaComponent: React.FC<IdeaComponentProps> = (data) => {
             Previous
           </Button>
           <Button
-            disabled={currentPage * pageSize >= data.ideas.ideas.length}
+            disabled={
+              currentPage * pageSize >= data.ideas.mostViewedIdeas.length
+            }
             onClick={() => paginate(currentPage + 1)}
           >
             Next
@@ -427,4 +429,4 @@ function ThumbsUpIcon(props: any) {
   );
 }
 
-export default IdeaComponent;
+export default MostViewedIdea;

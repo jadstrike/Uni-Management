@@ -27,7 +27,11 @@ import PageLoading from "./loading";
 export default function Page() {
   const [mostViewedIdeas, setMostViewedIdeas] = useState();
   const [loading, setLoading] = useState(false);
-  const [counts, setCounts] = useState();
+  const [counts, setCounts] = useState<{
+    ideaCount?: number;
+    staffCount?: number;
+    commentCount?: number;
+  }>();
 
   useEffect(() => {
     // Fetch the most-viewed ideas when the component mounts

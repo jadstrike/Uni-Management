@@ -208,13 +208,7 @@ export default function AddIdea() {
                   <FormItem>
                     <FormLabel>Attachment</FormLabel>
                     <FormControl>
-                      <Input
-                        onChange={(event) => {
-                          field.onChange(event.target?.files?.[0] ?? undefined);
-                        }}
-                        {...fileRef}
-                        type="file"
-                      />
+                      <Input {...fileRef} type="file" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

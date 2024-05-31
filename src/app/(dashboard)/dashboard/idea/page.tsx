@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
+
 import { isToday, isPast } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
@@ -33,6 +34,11 @@ interface Idea {
   authorId: string;
   file: string;
 }
+
+interface IdeaComponentProps {
+  ideas: { ideas: Idea[] };
+  userRole: string | undefined;
+}
 // import { users } from "@/constants/data";
 async function getIdeas() {
   const response = await axios.get("http://localhost:3000/api/ideas");
@@ -52,7 +58,7 @@ export default async function Page() {
   const cookieStore = cookies();
 
   const role = cookieStore.get("role");
-  const userRole = role?.value;
+  const userRole: any = role?.value;
   console.log(userRole);
   // const [userRole, setUserRole] = useState<string | undefined>(undefined);
 
@@ -106,6 +112,7 @@ export default async function Page() {
               simpleFinalClosureDate}
           </div>
           {userRole === "Admin" && <ClosureDate closure={resDate.closure} />}
+
           <main>
             <IdeaComponent ideas={data} userRole={userRole} />
           </main>

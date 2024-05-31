@@ -33,7 +33,7 @@ interface Staff {
   department: { name: string };
 }
 
-export function StaffTable(staffs: { staffs: Staff[]; userRole: string }) {
+export function StaffTable(staffs: { staffs: Staff[]; userRole: any }) {
   console.log(staffs.userRole);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
